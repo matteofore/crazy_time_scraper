@@ -3,16 +3,16 @@ from selenium.webdriver.common.by import By
 import pandas as pd
 import time
 
-
+# setting the connection to the site and obtaing the chromedriver from the local path
 website = 'https://tracksino.com/crazytime'
 path = '/Users/matteoforesti/Downloads/chromedriver'
+# it's important to have the Chromedriver updated with the version of Chrome in which you are working
 driver = webdriver.Chrome(path)
-driver.get(website) #here a Chrome window will be opened
+driver.get(website)
 
-plays = driver.find_elements(By.TAG_NAME, 'tr') #with this the code is going to get all the rows of the website, in the shape of a list
+# obtaining all the rows of the webpage in a list
+plays = driver.find_elements(By.TAG_NAME, 'tr') 
 
-
-#here empty lists are created in order to store the different columns of the rows scraped before
 date_time = []
 slot_result = []
 slot_multiplier = []
@@ -21,8 +21,8 @@ multiplier = []
 total_winners = []
 total_payout = []
 
+# scraping and saving the relevant information of the crazytime in the empty lists declared beforre
 i = 0
-print(plays)
 while i in range(100):
     for play in plays[1:]:
         date_time.append(play.find_element(By.XPATH, './td[1]').text)
@@ -39,12 +39,13 @@ while i in range(100):
     time.sleep(0.1)
     i += 1
 
+# this will close the driver once the scraping process is finished
 driver.close()
-#driver.quit() #this will close the driver once the scraping process is finished
+driver.quit() 
 
 #storing the data scraped into a df
 df = pd.DataFrame({'date_time' : date_time, 'slot_result':slot_result, 'slot_multiplier':slot_multiplier, 'spin_result':spin_result, 'multiplier':multiplier,'total_winners' : total_winners, 'total_payout' : total_payout})
-df.to_csv('log_eventi_tracksino2.csv') #index=False is for avoiding the automatic creation of the column of index
-print(df)
+df.to_csv('log_eventi_tracksino2.csv') 
+
 
 
